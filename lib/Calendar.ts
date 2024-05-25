@@ -26,7 +26,7 @@ export class Calendar {
 
   constructor(options: CalendarOptions = {}) {
     this.daysOfWeek = options.daysOfWeek || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    this.defaultDate = options.defaultDate || new Date();
+    this.defaultDate = options.defaultDate || new Date(new Date().setHours(0, 0, 0, 0));
     this.firstDayOfWeek = options.firstDayOfWeek ?? 0;
     this.monthNames = options.monthNames || [
       'January',
@@ -86,20 +86,24 @@ export class Calendar {
       </table>`;
 
     if (this.showTimePicker) {
+      const hours = this.defaultDate.getHours();
+      const minutes = this.defaultDate.getMinutes();
+      const seconds = this.defaultDate.getSeconds();
+
       calendar += `
         <div class="Calendar__timepicker">
           <select class="Calendar__select--hours">
-            ${this.generateTimeOptions(24)}
+            ${this.generateTimeOptions(24, hours)}
           </select>
           <span>:</span>
           <select class="Calendar__select--minutes">
-            ${this.generateTimeOptions(60)}
+            ${this.generateTimeOptions(60, minutes)}
           </select>`;
       if (this.showSeconds) {
         calendar += `
           <span>:</span>
           <select class="Calendar__select--seconds">
-            ${this.generateTimeOptions(60)}
+            ${this.generateTimeOptions(60, seconds)}
           </select>`;
       }
       calendar += `</div>`;
@@ -147,10 +151,10 @@ export class Calendar {
     return options;
   }
 
-  private generateTimeOptions(range: number): string {
+  private generateTimeOptions(range: number, selectedValue: number): string {
     let options = '';
     for (let i = 0; i < range; i++) {
-      options += `<option value="${i}">${String(i).padStart(2, '0')}</option>`;
+      options += `<option value="${i}" ${i === selectedValue ? 'selected' : ''}>${String(i).padStart(2, '0')}</option>`;
     }
     return options;
   }
