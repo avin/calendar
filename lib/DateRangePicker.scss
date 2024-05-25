@@ -43,12 +43,16 @@
         background: lightblue;
       }
       &--in-range {
-        background: lightgoldenrodyellow;
+        background: lightcyan;
       }
       &--selected-end {
         border-radius: 0 15px 15px 0;
-        background: lightsalmon;
+        background: lightblue;
       }
     }
+  }
+
+  .Calendar__cell--selected-start.Calendar__cell--selected-end {
+    border-radius: 15px;
   }
 }

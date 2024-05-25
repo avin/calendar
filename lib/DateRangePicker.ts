@@ -70,13 +70,11 @@ export class DateRangePicker {
       if (this.calendarContainer.style.display === 'none') {
         this.showCalendar();
       } else {
-        // this.hideCalendar();
+        this.hideCalendar();
       }
     });
 
     document.addEventListener('click', (event) => {
-      console.log(this.element, event.target);
-      // debugger;
       if (!this.element.contains(event.target as Node)) {
         this.hideCalendar();
       }
@@ -115,15 +113,16 @@ export class DateRangePicker {
   }
 
   private getDateCellClass(date: Date, _calendarType: 'start' | 'end'): string {
+    let className = '';
     if (this.startDate && this.startDate.toDateString() === date.toDateString()) {
-      return 'Calendar__cell--selected-start';
+      className += ' Calendar__cell--selected-start';
     }
     if (this.endDate && this.endDate.toDateString() === date.toDateString()) {
-      return 'Calendar__cell--selected-end';
+      className += ' Calendar__cell--selected-end';
     }
     if (this.startDate && this.endDate && date > this.startDate && date < this.endDate) {
-      return 'Calendar__cell--in-range';
+      className += ' Calendar__cell--in-range';
     }
-    return '';
+    return className;
   }
 }
