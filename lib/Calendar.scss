@@ -1,0 +1,90 @@
+.Calendar {
+  width: 300px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+
+  &__controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    & > * + * {
+      margin-left: 4px;
+    }
+
+    .Calendar__select {
+      &--month {
+        width: 60%;
+      }
+
+      &--year {
+        width: 35%;
+      }
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 8px;
+      text-align: center;
+      // border: 1px solid #eee;
+    }
+
+    .calendar__cell--header {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    .calendar__cell--empty {
+      background-color: #fff;
+    }
+
+    .calendar__cell--day {
+      cursor: pointer;
+      &:hover {
+        background-color: #d0e0f0;
+      }
+    }
+  }
+
+  &__timepicker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+
+    & > * + * {
+      margin-left: 4px;
+    }
+
+    .calendar__select {
+      margin: 0 4px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+
+      &--hours,
+      &--minutes,
+      &--seconds {
+        width: 60px;
+      }
+    }
+  }
+
+  select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    background-color: #fff;
+    cursor: pointer;
+  }
+}

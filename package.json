@@ -1,0 +1,24 @@
+{
+  "name": "@avinlab/calendar",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --p ./tsconfig-build.json && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-css-order": "^2.1.2",
+    "sass": "^1.77.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.1"
+  },
+  "volta": {
+    "node": "21.1.0",
+    "npm": "10.2.3"
+  }
+}

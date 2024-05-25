@@ -1,0 +1,54 @@
+.DateRangePicker {
+  display: inline-block;
+  position: relative;
+
+  &__button {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  &__calendar-container {
+    display: flex;
+    z-index: 10;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    .calendar {
+      margin: 8px;
+    }
+  }
+
+  .Calendar {
+    border: none;
+
+    &__cell {
+      &--day {
+        cursor: pointer;
+      }
+      &--selected-start {
+        border-radius: 15px 0 0 15px;
+        background: lightblue;
+      }
+      &--in-range {
+        background: lightgoldenrodyellow;
+      }
+      &--selected-end {
+        border-radius: 0 15px 15px 0;
+        background: lightsalmon;
+      }
+    }
+  }
+}
