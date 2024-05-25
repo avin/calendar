@@ -10,8 +10,8 @@ export default defineConfig({
     copyPublicDir: false,
     lib: {
       entry: resolve(__dirname, 'lib/index.ts'),
-      name: 'Calendar',
-      fileName: 'calendar',
+      name: 'CalendarLib',
+      fileName: 'index',
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
