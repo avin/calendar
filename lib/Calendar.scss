@@ -37,16 +37,16 @@
       // border: 1px solid #eee;
     }
 
-    .calendar__cell--header {
+    .Calendar__cell--header {
       background-color: #f0f0f0;
       font-weight: bold;
     }
 
-    .calendar__cell--empty {
+    .Calendar__cell--empty {
       background-color: #fff;
     }
 
-    .calendar__cell--day {
+    .Calendar__cell--day {
       cursor: pointer;
       &:hover {
         background-color: #d0e0f0;
@@ -64,7 +64,7 @@
       margin-left: 4px;
     }
 
-    .calendar__select {
+    .Calendar__select {
       margin: 0 4px;
       padding: 8px;
       border: 1px solid #ccc;

@@ -1,8 +1,10 @@
 import { Calendar, CalendarOptions } from './Calendar';
+import { isSameDate } from './utils/date.ts';
 
 interface DatePickerOptions {
   placeholder?: string;
   defaultDate?: Date;
+  closeCalendarOnSelectDate?: boolean;
   calendarOptions?: Omit<CalendarOptions, 'onDateChange'>;
 }
 
@@ -10,6 +12,7 @@ export class DatePicker {
   public element: HTMLElement;
   private selectedDate: Date | null;
   private placeholder: string;
+  private closeCalendarOnSelectDate: boolean;
   private calendar: Calendar;
   private calendarContainer: HTMLElement;
   private button: HTMLButtonElement;
@@ -17,13 +20,28 @@ export class DatePicker {
   constructor(options: DatePickerOptions = {}) {
     this.selectedDate = options.defaultDate || null;
     this.placeholder = options.placeholder || 'Выберите дату';
+    this.closeCalendarOnSelectDate = options.closeCalendarOnSelectDate || false;
 
     this.calendar = new Calendar({
       ...options.calendarOptions,
       onDateChange: (date: Date) => {
-        this.selectedDate = date;
+        const prevSelectedDate = this.selectedDate;
+        this.selectedDate = new Date(date);
         this.updateButtonLabel();
-        this.hideCalendar();
+        this.calendar.updateCalendar();
+
+        if (this.closeCalendarOnSelectDate) {
+          if (!prevSelectedDate || !isSameDate(prevSelectedDate, date)) {
+            this.hideCalendar();
+          }
+        }
+      },
+      dateCellClass: (date: Date) => {
+        console.log(this.selectedDate && isSameDate(this.selectedDate, date));
+        if (this.selectedDate && isSameDate(this.selectedDate, date)) {
+          return 'Calendar__cell--selected-day';
+        }
+        return '';
       },
     });
 
@@ -69,10 +87,14 @@ export class DatePicker {
       }
     });
 
-    document.addEventListener('click', (event) => {
-      if (!this.element.contains(event.target as Node)) {
-        this.hideCalendar();
-      }
-    });
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (!this.element.contains(event.target as Node)) {
+          this.hideCalendar();
+        }
+      },
+      true,
+    );
   }
 }

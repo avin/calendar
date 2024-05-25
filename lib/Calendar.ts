@@ -2,7 +2,7 @@ import { shiftArray } from './utils/array.ts';
 
 export interface CalendarOptions {
   daysOfWeek?: string[];
-  startDate?: Date;
+  defaultDate?: Date;
   firstDayOfWeek?: number; // 0 for Sunday, 1 for Monday, etc.
   monthNames?: string[];
   yearRange?: number;
@@ -15,7 +15,7 @@ export interface CalendarOptions {
 export class Calendar {
   public element: HTMLElement;
   private daysOfWeek: string[];
-  private startDate: Date;
+  private defaultDate: Date;
   private firstDayOfWeek: number;
   private monthNames: string[];
   private yearRange: number;
@@ -26,7 +26,7 @@ export class Calendar {
 
   constructor(options: CalendarOptions = {}) {
     this.daysOfWeek = options.daysOfWeek || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    this.startDate = options.startDate || new Date();
+    this.defaultDate = options.defaultDate || new Date();
     this.firstDayOfWeek = options.firstDayOfWeek ?? 0;
     this.monthNames = options.monthNames || [
       'January',
@@ -62,8 +62,8 @@ export class Calendar {
   }
 
   private render() {
-    const month = this.startDate.getMonth();
-    const year = this.startDate.getFullYear();
+    const month = this.defaultDate.getMonth();
+    const year = this.defaultDate.getFullYear();
 
     let calendar = `
       <div class="${this.cn('controls')}">
@@ -168,12 +168,12 @@ export class Calendar {
     );
 
     monthSelect.addEventListener('change', (_event) => {
-      this.startDate.setMonth(Number(monthSelect.value));
+      this.defaultDate.setMonth(Number(monthSelect.value));
       this.updateCalendar();
     });
 
     yearSelect.addEventListener('change', (_event) => {
-      this.startDate.setFullYear(Number(yearSelect.value));
+      this.defaultDate.setFullYear(Number(yearSelect.value));
       this.updateCalendar();
     });
 
@@ -181,7 +181,7 @@ export class Calendar {
       cell.addEventListener('click', (event) => {
         const day = (event.target as HTMLTableCellElement).dataset.day;
         if (day) {
-          this.startDate.setDate(Number(day));
+          this.defaultDate.setDate(Number(day));
           this.updateSelectedTime();
           this.triggerDateChange();
         }
@@ -216,12 +216,12 @@ export class Calendar {
     const minutes = minutesSelect ? Number(minutesSelect.value) : 0;
     const seconds = secondsSelect ? Number(secondsSelect.value) : 0;
 
-    this.startDate.setHours(hours, minutes, seconds);
+    this.defaultDate.setHours(hours, minutes, seconds);
   }
 
   private triggerDateChange() {
     if (this.onDateChange) {
-      this.onDateChange(this.startDate);
+      this.onDateChange(this.defaultDate);
     }
   }
 }

@@ -33,6 +33,11 @@
       &--day {
         cursor: pointer;
       }
+
+      &--selected-day {
+        border-radius: 8px;
+        background: lightsalmon;
+      }
     }
   }
 }
