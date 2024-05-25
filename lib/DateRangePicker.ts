@@ -1,7 +1,9 @@
 import { Calendar, CalendarOptions } from './Calendar';
 
 interface DateRangePickerOptions {
-  placeholder?: string;
+  renderButtonLabel?: (v: [Date, Date] | null) => string;
+  onSelect?: (v: [Date, Date] | null) => void;
+  defaultDateRange?: [Date, Date] | null;
   calendarOptions?: Omit<CalendarOptions, 'onDateChange'>;
 }
 
@@ -9,16 +11,18 @@ export class DateRangePicker {
   public element: HTMLElement;
   private startDate: Date | null;
   private endDate: Date | null;
-  private placeholder: string;
+  private renderButtonLabel: DateRangePickerOptions['renderButtonLabel'];
+  private onSelect: DateRangePickerOptions['onSelect'];
   private calendarStart: Calendar;
   private calendarEnd: Calendar;
   private calendarContainer: HTMLElement;
   private button: HTMLButtonElement;
 
   constructor(options: DateRangePickerOptions = {}) {
-    this.startDate = null;
-    this.endDate = null;
-    this.placeholder = options.placeholder || 'Выберите период';
+    this.startDate = options.defaultDateRange ? options.defaultDateRange[0] : null;
+    this.endDate = options.defaultDateRange ? options.defaultDateRange[1] : null;
+    this.renderButtonLabel = options.renderButtonLabel;
+    this.onSelect = options.onSelect;
 
     this.calendarStart = new Calendar({
       ...options.calendarOptions,
@@ -68,9 +72,17 @@ export class DateRangePicker {
 
   private updateButtonLabel() {
     if (this.startDate && this.endDate) {
-      this.button.textContent = `${this.startDate.toLocaleDateString()} - ${this.endDate.toLocaleDateString()}`;
+      if (this.renderButtonLabel) {
+        this.button.textContent = this.renderButtonLabel([this.startDate, this.endDate]);
+      } else {
+        this.button.textContent = `${this.startDate.toLocaleDateString()} - ${this.endDate.toLocaleDateString()}`;
+      }
     } else {
-      this.button.textContent = this.placeholder;
+      if (this.renderButtonLabel) {
+        this.button.textContent = this.renderButtonLabel(null);
+      } else {
+        this.button.textContent = 'Choose date range';
+      }
     }
   }
 
@@ -110,6 +122,7 @@ export class DateRangePicker {
 
     this.updateCalendars();
     this.updateButtonLabel();
+    this.handleSelect();
   }
 
   private handleEndDateChange(date: Date) {
@@ -120,6 +133,17 @@ export class DateRangePicker {
 
     this.updateCalendars();
     this.updateButtonLabel();
+    this.handleSelect();
+  }
+
+  private handleSelect() {
+    if (this.onSelect) {
+      if (this.startDate && this.endDate) {
+        this.onSelect([this.startDate, this.endDate]);
+      } else {
+        this.onSelect(null);
+      }
+    }
   }
 
   private updateCalendars() {

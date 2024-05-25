@@ -2,16 +2,18 @@ import { Calendar, CalendarOptions } from './Calendar';
 import { isSameDate } from './utils/date.ts';
 
 interface DatePickerOptions {
-  placeholder?: string;
+  renderButtonLabel?: (v: Date | null) => string;
   defaultDate?: Date;
   closeCalendarOnSelectDate?: boolean;
   calendarOptions?: Omit<CalendarOptions, 'onDateChange'>;
+  onSelect?: (v: Date | null) => void;
 }
 
 export class DatePicker {
   public element: HTMLElement;
   private selectedDate: Date | null;
-  private placeholder: string;
+  private renderButtonLabel: DatePickerOptions['renderButtonLabel'];
+  private onSelect: DatePickerOptions['onSelect'];
   private closeCalendarOnSelectDate: boolean;
   private calendar: Calendar;
   private calendarContainer: HTMLElement;
@@ -19,7 +21,8 @@ export class DatePicker {
 
   constructor(options: DatePickerOptions = {}) {
     this.selectedDate = options.defaultDate || null;
-    this.placeholder = options.placeholder || 'Выберите дату';
+    this.renderButtonLabel = options.renderButtonLabel;
+    this.onSelect = options.onSelect;
     this.closeCalendarOnSelectDate = options.closeCalendarOnSelectDate || false;
 
     this.calendar = new Calendar({
@@ -35,13 +38,19 @@ export class DatePicker {
             this.hideCalendar();
           }
         }
+        if (this.onSelect) {
+          this.onSelect(date);
+        }
       },
       dateCellClass: (date: Date) => {
-        console.log(this.selectedDate && isSameDate(this.selectedDate, date));
-        if (this.selectedDate && isSameDate(this.selectedDate, date)) {
-          return 'Calendar__cell--selected-day';
+        let className = '';
+        if (options.calendarOptions?.dateCellClass) {
+          className += options.calendarOptions.dateCellClass(date);
         }
-        return '';
+        if (this.selectedDate && isSameDate(this.selectedDate, date)) {
+          className += ' Calendar__cell--selected-day';
+        }
+        return className;
       },
     });
 
@@ -63,10 +72,14 @@ export class DatePicker {
   }
 
   private updateButtonLabel() {
-    if (this.selectedDate) {
-      this.button.textContent = this.selectedDate.toLocaleDateString();
+    if (this.renderButtonLabel) {
+      this.button.textContent = this.renderButtonLabel(this.selectedDate);
     } else {
-      this.button.textContent = this.placeholder;
+      if (this.selectedDate) {
+        this.button.textContent = this.selectedDate.toLocaleString();
+      } else {
+        this.button.textContent = 'Choose date';
+      }
     }
   }
 

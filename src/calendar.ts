@@ -1,5 +1,5 @@
 import '../lib/Calendar.scss';
-import {Calendar, CalendarOptions} from '../lib';
+import { Calendar, CalendarOptions } from '../lib';
 
 export const generalCalendarOptions: CalendarOptions = {
   daysOfWeek: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
@@ -35,11 +35,11 @@ export const generalCalendarOptions: CalendarOptions = {
     }
     return result;
   },
-}
+};
 
 export const renderCalendar = (parentElement: HTMLElement) => {
   const calendar = new Calendar({
-    ...generalCalendarOptions
+    ...generalCalendarOptions,
   });
 
   parentElement.append(calendar.element);
