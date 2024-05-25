@@ -4,7 +4,9 @@ import { generalCalendarOptions } from './calendar.ts';
 
 export const renderDateRangePicker = (parentElement: HTMLElement) => {
   const calendar = new DateRangePicker({
-    ...generalCalendarOptions,
+    calendarOptions: {
+      ...generalCalendarOptions,
+    }
   });
 
   parentElement.append(calendar.element);

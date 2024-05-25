@@ -1,7 +1,8 @@
 import { Calendar, CalendarOptions } from './Calendar';
 
-interface DateRangePickerOptions extends CalendarOptions {
+interface DateRangePickerOptions {
   placeholder?: string;
+  calendarOptions?: Omit<CalendarOptions, 'onDateChange'>;
 }
 
 export class DateRangePicker {
@@ -20,15 +21,31 @@ export class DateRangePicker {
     this.placeholder = options.placeholder || 'Выберите период';
 
     this.calendarStart = new Calendar({
-      ...options,
-      onDateChange: (date: Date) => this.handleStartDateChange(date),
-      dateCellClass: (date: Date) => this.getDateCellClass(date, 'start')
+      ...options.calendarOptions,
+      onDateChange: (date: Date) => {
+        this.handleStartDateChange(date);
+      },
+      dateCellClass: (date: Date) => {
+        let className = this.getDateCellClass(date, 'start');
+        if (options.calendarOptions?.dateCellClass) {
+          className += options.calendarOptions?.dateCellClass(date);
+        }
+        return className;
+      },
     });
 
     this.calendarEnd = new Calendar({
-      ...options,
-      onDateChange: (date: Date) => this.handleEndDateChange(date),
-      dateCellClass: (date: Date) => this.getDateCellClass(date, 'end')
+      ...options.calendarOptions,
+      onDateChange: (date: Date) => {
+        this.handleEndDateChange(date);
+      },
+      dateCellClass: (date: Date) => {
+        let className = this.getDateCellClass(date, 'end');
+        if (options.calendarOptions?.dateCellClass) {
+          className += options.calendarOptions?.dateCellClass(date);
+        }
+        return className;
+      },
     });
 
     this.button = document.createElement('button');
@@ -74,35 +91,33 @@ export class DateRangePicker {
       }
     });
 
-    document.addEventListener('click', (event) => {
-      if (!this.element.contains(event.target as Node)) {
-        this.hideCalendar();
-      }
-    }, true);
+    document.addEventListener(
+      'click',
+      (event) => {
+        if (!this.element.contains(event.target as Node)) {
+          this.hideCalendar();
+        }
+      },
+      true,
+    );
   }
 
   private handleStartDateChange(date: Date) {
-    if (this.startDate && this.startDate.getTime() === date.getTime()) {
-      this.startDate = null;
-    } else {
-      this.startDate = new Date(date);
-      if (this.endDate && this.endDate < this.startDate) {
-        this.endDate = null;
-      }
+    this.startDate = new Date(date);
+    if (this.endDate && this.endDate < this.startDate) {
+      this.endDate = null;
     }
+
     this.updateCalendars();
     this.updateButtonLabel();
   }
 
   private handleEndDateChange(date: Date) {
-    if (this.endDate && this.endDate.getTime() === date.getTime()) {
-      this.endDate = null;
-    } else {
-      this.endDate = new Date(date);
-      if (this.startDate && this.endDate < this.startDate) {
-        this.startDate = null;
-      }
+    this.endDate = new Date(date);
+    if (this.startDate && this.endDate < this.startDate) {
+      this.startDate = null;
     }
+
     this.updateCalendars();
     this.updateButtonLabel();
   }

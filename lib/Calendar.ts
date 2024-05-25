@@ -28,7 +28,20 @@ export class Calendar {
     this.daysOfWeek = options.daysOfWeek || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     this.startDate = options.startDate || new Date();
     this.firstDayOfWeek = options.firstDayOfWeek ?? 0;
-    this.monthNames = options.monthNames || ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    this.monthNames = options.monthNames || [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
     this.yearRange = options.yearRange || 20;
     this.showTimePicker = options.showTimePicker ?? false;
     this.showSeconds = options.showSeconds ?? false;
@@ -54,16 +67,16 @@ export class Calendar {
 
     let calendar = `
       <div class="${this.cn('controls')}">
-        <select class="${this.cn('select', 'month')}">
+        <select class="Calendar__select--month">
           ${this.monthNames.map((name, index) => `<option value="${index}" ${index === month ? 'selected' : ''}>${name}</option>`).join('')}
         </select>
-        <select class="${this.cn('select', 'year')}">
+        <select class="Calendar__select--year">
           ${this.generateYearOptions(year)}
         </select>
       </div>
-      <table class="${this.cn('table')}">
+      <table class="Calendar__table">
         <thead>
-          <tr class="${this.cn('row')}">
+          <tr class="Calendar__row">
             ${this.renderDaysOfWeek()}
           </tr>
         </thead>
@@ -74,18 +87,18 @@ export class Calendar {
 
     if (this.showTimePicker) {
       calendar += `
-        <div class="${this.cn('timepicker')}">
-          <select class="${this.cn('select', 'hours')}">
+        <div class="Calendar__timepicker">
+          <select class="Calendar__select--hours">
             ${this.generateTimeOptions(24)}
           </select>
           <span>:</span>
-          <select class="${this.cn('select', 'minutes')}">
+          <select class="Calendar__select--minutes">
             ${this.generateTimeOptions(60)}
           </select>`;
       if (this.showSeconds) {
         calendar += `
           <span>:</span>
-          <select class="${this.cn('select', 'seconds')}">
+          <select class="Calendar__select--seconds">
             ${this.generateTimeOptions(60)}
           </select>`;
       }
@@ -97,7 +110,9 @@ export class Calendar {
 
   private renderDaysOfWeek() {
     const shiftedDaysOfWeek = shiftArray(this.daysOfWeek, this.firstDayOfWeek);
-    return shiftedDaysOfWeek.map(day => `<th class="${this.cn('cell', 'header')}">${day}</th>`).join('');
+    return shiftedDaysOfWeek
+      .map((day) => `<th class="${this.cn('cell', 'header')}">${day}</th>`)
+      .join('');
   }
 
   private renderDays(month: number, year: number) {
@@ -141,10 +156,16 @@ export class Calendar {
   }
 
   private addEventListeners() {
-    const monthSelect = this.element.querySelector(`.${this.cn('select', 'month')}`) as HTMLSelectElement;
-    const yearSelect = this.element.querySelector(`.${this.cn('select', 'year')}`) as HTMLSelectElement;
+    const monthSelect = this.element.querySelector(
+      `.${this.cn('select', 'month')}`,
+    ) as HTMLSelectElement;
+    const yearSelect = this.element.querySelector(
+      `.${this.cn('select', 'year')}`,
+    ) as HTMLSelectElement;
     const dayCells = this.element.querySelectorAll(`.${this.cn('cell', 'day')}`);
-    const timeSelects = this.element.querySelectorAll(`.${this.cn('select', 'hours')}, .${this.cn('select', 'minutes')}, .${this.cn('select', 'seconds')}`);
+    const timeSelects = this.element.querySelectorAll(
+      `.${this.cn('select', 'hours')}, .${this.cn('select', 'minutes')}, .${this.cn('select', 'seconds')}`,
+    );
 
     monthSelect.addEventListener('change', (_event) => {
       this.startDate.setMonth(Number(monthSelect.value));
@@ -156,7 +177,7 @@ export class Calendar {
       this.updateCalendar();
     });
 
-    dayCells.forEach(cell => {
+    dayCells.forEach((cell) => {
       cell.addEventListener('click', (event) => {
         const day = (event.target as HTMLTableCellElement).dataset.day;
         if (day) {
@@ -167,7 +188,7 @@ export class Calendar {
       });
     });
 
-    timeSelects.forEach(select => {
+    timeSelects.forEach((select) => {
       select.addEventListener('change', (_event) => {
         this.updateSelectedTime();
         this.triggerDateChange();
@@ -181,9 +202,15 @@ export class Calendar {
   }
 
   private updateSelectedTime() {
-    const hoursSelect = this.element.querySelector(`.${this.cn('select', 'hours')}`) as HTMLSelectElement;
-    const minutesSelect = this.element.querySelector(`.${this.cn('select', 'minutes')}`) as HTMLSelectElement;
-    const secondsSelect = this.showSeconds ? (this.element.querySelector(`.${this.cn('select', 'seconds')}`) as HTMLSelectElement) : null;
+    const hoursSelect = this.element.querySelector(
+      `.${this.cn('select', 'hours')}`,
+    ) as HTMLSelectElement;
+    const minutesSelect = this.element.querySelector(
+      `.${this.cn('select', 'minutes')}`,
+    ) as HTMLSelectElement;
+    const secondsSelect = this.showSeconds
+      ? (this.element.querySelector(`.${this.cn('select', 'seconds')}`) as HTMLSelectElement)
+      : null;
 
     const hours = hoursSelect ? Number(hoursSelect.value) : 0;
     const minutes = minutesSelect ? Number(minutesSelect.value) : 0;

@@ -1,7 +1,9 @@
 import { Calendar, CalendarOptions } from './Calendar';
 
-interface DatePickerOptions extends CalendarOptions {
+interface DatePickerOptions {
   placeholder?: string;
+  defaultDate?: Date;
+  calendarOptions?: Omit<CalendarOptions, 'onDateChange'>;
 }
 
 export class DatePicker {
@@ -13,11 +15,11 @@ export class DatePicker {
   private button: HTMLButtonElement;
 
   constructor(options: DatePickerOptions = {}) {
-    this.selectedDate = options.startDate || null;
+    this.selectedDate = options.defaultDate || null;
     this.placeholder = options.placeholder || 'Выберите дату';
 
     this.calendar = new Calendar({
-      ...options,
+      ...options.calendarOptions,
       onDateChange: (date: Date) => {
         this.selectedDate = date;
         this.updateButtonLabel();
